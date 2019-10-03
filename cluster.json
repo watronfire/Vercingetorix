@@ -1,0 +1,11 @@
+{
+  "__default__" :
+  {
+    "walltime" : "2:00:00",
+    "mem" : "5gb",
+    "queue" : "workq",
+    "logfile" : "/gpfs/home/natem/logs/workq.txt",
+    "n" : 1,
+    "stdout" : "oe"
+  }
+}

@@ -196,18 +196,17 @@ rule umi_extraction:
     input:
         lambda wildcards: os.path.join( "{in_dir}".format( in_dir = in_dir ), SAMPLES[wildcards.sample][0] ),
         lambda wildcards: os.path.join( "{in_dir}".format( in_dir = in_dir ), SAMPLES[wildcards.sample][1] )
-    params:
-        folder = os.path.join( "{out_dir}", "umi_extracted", "{sample}" ),
-        barcode_loc = os.path.join( "{out_dir}", "barcodes.txt" )
     output:
         os.path.join( "{out_dir}", "umi_extracted", "{sample}", "{sample}_R1.fastq.gz" ),
         os.path.join( "{out_dir}", "umi_extracted", "{sample}", "{sample}_R2.fastq.gz" )
     run:
-        # Create the barcode.txt file which is just a tsv with the sample name, and barcode sequence. Redundant af.
-        with open( params.barcode_loc, "w" ) as barcodes_file:
+        # Create the barcode.txt file which is just a tsv with the sample name, and barcode sequence. Needs to be placed
+        # in the samples folder to avoid bullshit.
+        barcode_loc = os.path.join( out_dir, "umi_extracted/{sample}/barcodes.txt" )
+        with open( barcode_loc, "w" ) as barcodes_file:
             barcodes_string = [wildcards.sample, config["umi_extraction"]["barcode"], "", "\n"]
             barcodes_file.write( "\t".join( barcodes_string ) )
 
         # Call MIGEC to extract the UMIs using the barcode.txt file just created.
-        subprocess.call( ["migec", "Checkout", config["umi_extraction"]["migec_options"], params.barcode_loc, input[0], input[1], params.folder] )
+        subprocess.call( ["migec", "Checkout", config["umi_extraction"]["migec_options"], barcode_loc, input[0], input[1], os.path.join( out_dir, "umi_extraction", wildcards.sample )] )
 
