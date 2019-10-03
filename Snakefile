@@ -3,7 +3,7 @@ from fnmatch import fnmatch
 import subprocess
 import pandas as pd
 
-# Random ass shit: mixcr doesn't do well with spaces in file names. Maybe even parenthesis.
+# Random ass shit: mixcr and migec don't do well with spaces in file names. Maybe even parenthesis.
 configfile: "/Users/natem/Dropbox (Scripps Research)/Personal/Code/Python/Vercingetorix/snakemake_config.json"
 
 in_dir = config["__default__"]["in_dir"]
@@ -71,7 +71,7 @@ rule umi_collapse_bulk:
         command = 'for i in {}*.fastq.gz ; do mv "$i" "$(echo $i | cut -f1,4,5 -d. )" ; done'.format( params.output_folder )
         subprocess.call( command, shell=True )
 
-# Shelve this rule for now. MIGEC is poorly written and needs to be updated by the maintaners. A issue has been raised.
+# Shelve this rule for now. MIGEC isn't functioning the way I'd like it too. A issue has been raised.
 #rule umi_collapse:
 #    input:
 #        os.path.join( out_dir, "umi_extracted", "{sample}_R1.fastq.gz" ),
