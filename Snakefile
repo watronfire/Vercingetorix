@@ -27,12 +27,11 @@ rule repertoire_assembly:
     input:
         os.path.join( out_dir, "umi_collapsed/{sample}_R1.fastq.gz" ),
         os.path.join( out_dir, "umi_collapsed/{sample}_R2.fastq.gz" )
-    params:
-        sample = os.path.join( out_dir, "analyze/{sample}" )
     output:
         os.path.join( out_dir, "analyze/{sample}.clonotypes.TRA.txt" ),
         os.path.join( out_dir, "analyze/{sample}.clonotypes.TRB.txt" )
     run:
+        sample_folder = os.path.join( out_dir, "analyze/{sample}" )
         # First build the command
         command = "mixcr analyze amplicon --species {} --starting-material {} --5-end {} --3-end {} --adapters {} --receptor-type {} {} {} {} {}".format(
             config["repertoire_assembly"]["species"],
@@ -44,7 +43,7 @@ rule repertoire_assembly:
             config["repertoire_assembly"]["etc"],
             input[0],
             input[1],
-            params.sample
+            sample_folder
         )
         subprocess.call( command, shell=True )
 # TODO: need to write a contamination cleaning rule.
