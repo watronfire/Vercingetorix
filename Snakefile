@@ -201,11 +201,11 @@ rule umi_extraction:
     run:
         # Create the barcode.txt file which is just a tsv with the sample name, and barcode sequence. Needs to be placed
         # in the samples folder to avoid bullshit.
-        barcode_loc = os.path.join( out_dir, "umi_extracted/{sample}/barcodes.txt" )
+        barcode_loc = os.path.join( out_dir, "umi_extracted", wildcards.sample, "barcodes.txt" )
         with open( barcode_loc, "w" ) as barcodes_file:
             barcodes_string = [wildcards.sample, config["umi_extraction"]["barcode"], "", "\n"]
             barcodes_file.write( "\t".join( barcodes_string ) )
 
         # Call MIGEC to extract the UMIs using the barcode.txt file just created.
-        subprocess.call( ["migec", "Checkout", config["umi_extraction"]["migec_options"], barcode_loc, input[0], input[1], os.path.join( out_dir, "umi_extraction", wildcards.sample )] )
+        subprocess.call( ["migec", "Checkout", config["umi_extraction"]["migec_options"], barcode_loc, input[0], input[1], os.path.join( out_dir, "umi_extracted", wildcards.sample )] )
 
