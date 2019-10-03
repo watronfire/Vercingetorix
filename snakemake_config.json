@@ -1,0 +1,31 @@
+{
+  "__default__" : {
+    "in_dir" : "/Users/natem/storedAnalysis/input",
+    "in_ext" : "fastq.gz",
+    "out_dir" : "/Users/natem/storedAnalysis/output_sm",
+    "run_name" : "testing",
+    "sampleRegex" : "\\b\\w[a-zA-Z0-9]{3}\\b"
+  },
+  "repertoire_assembly" : {
+    "species" : "hs",
+    "starting_material" : "rna",
+    "5-end" : "no-v-primers",
+    "3-end" : "c-primers",
+    "adapters" : "adapters-present",
+    "receptor_type" : "TCR",
+    "etc" : "--align \"-OreadsLayout=Collinear\" --assemble \"-OqualityAggregationType=Average\""
+  },
+  "umi_collapse" : {
+    "assemble_options" : ""
+  },
+  "mig_statistics" : {
+    "options" : ""
+  },
+  "cleanup_extraction" : {
+    "options" : ""
+  },
+  "umi_extraction" : {
+    "barcode" : "cagtggtatcaacgcagagTNNNNTNNNNTNNNNTct",
+    "migec_options" : "-cute --skip-undef"
+  }
+}
