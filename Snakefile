@@ -4,7 +4,6 @@ import subprocess
 import pandas as pd
 
 # Random ass shit: mixcr and migec don't do well with spaces in file names. Maybe even parenthesis.
-configfile: "/Users/natem/Dropbox (Scripps Research)/Personal/Code/Python/Vercingetorix/snakemake_config.json"
 
 in_dir = config["__default__"]["in_dir"]
 in_ext = config["__default__"]["in_ext"]
@@ -31,7 +30,7 @@ rule repertoire_assembly:
         os.path.join( out_dir, "analyze/{sample}.clonotypes.TRA.txt" ),
         os.path.join( out_dir, "analyze/{sample}.clonotypes.TRB.txt" )
     run:
-        sample_folder = os.path.join( out_dir, "analyze/{sample}" )
+        sample_folder = os.path.join( out_dir, "analyze", wildcards.sample )
         # First build the command
         command = "mixcr analyze amplicon --species {} --starting-material {} --5-end {} --3-end {} --adapters {} --receptor-type {} {} {} {} {}".format(
             config["repertoire_assembly"]["species"],
@@ -67,7 +66,7 @@ rule umi_collapse_bulk:
         subprocess.call( command, shell=True )
 
         #Remove the stupid options in the filename.
-        command = 'for i in {}*.fastq.gz ; do mv "$i" "$(echo $i | cut -f1,4,5 -d. )" ; done'.format( params.output_folder )
+        command = 'for i in {}*.fastq.gz ; do mv "$i" "{}$(echo $i | rev | cut -f1 -d/ | rev | cut -f1,4,5 -d. )"; done'.format( params.output_folder, params.output_folder )
         subprocess.call( command, shell=True )
 
 # Shelve this rule for now. MIGEC isn't functioning the way I'd like it too. A issue has been raised.
