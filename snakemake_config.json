@@ -15,14 +15,8 @@
     "receptor_type" : "TCR",
     "etc" : "--align \"-OreadsLayout=Collinear\" --assemble \"-OqualityAggregationType=Average\""
   },
-  "umi_collapse" : {
-    "assemble_options" : ""
-  },
-  "mig_statistics" : {
-    "options" : ""
-  },
-  "cleanup_extraction" : {
-    "options" : ""
+  "remove_contamination" : {
+    "threshold" : 40
   },
   "umi_extraction" : {
     "barcode" : "cagtggtatcaacgcagagTNNNNTNNNNTNNNNTct",

@@ -22,10 +22,12 @@ rule all:
     input:
         expand( os.path.join( out_dir, "analyze/{sample}.clonotypes.{chain}.txt" ), out_dir=out_dir, sample=SAMPLES, chain=["TRA", "TRB"] )
 
+# TODO combine log files into a pandas dataframe and export into csv.
+
 rule repertoire_assembly:
     input:
-        os.path.join( out_dir, "umi_collapsed/{sample}_R1.fastq.gz" ),
-        os.path.join( out_dir, "umi_collapsed/{sample}_R2.fastq.gz" )
+        os.path.join( out_dir, "cleaned/{sample}_R1.fastq.gz" ),
+        os.path.join( out_dir, "cleaned/{sample}_R2.fastq.gz" )
     output:
         os.path.join( out_dir, "analyze/{sample}.clonotypes.TRA.txt" ),
         os.path.join( out_dir, "analyze/{sample}.clonotypes.TRB.txt" )
@@ -45,7 +47,17 @@ rule repertoire_assembly:
             sample_folder
         )
         subprocess.call( command, shell=True )
-# TODO: need to write a contamination cleaning rule.
+
+rule remove_contamination:
+    input:
+        expand( os.path.join( out_dir, "umi_collapsed/{sample}_{read}.fastq.gz" ), out_dir=out_dir, sample=SAMPLES, read=["R1", "R2"] )
+    params:
+        input_folder = os.path.join( out_dir, "umi_collapsed" ),
+        output_dir = os.path.join( out_dir, "cleaned" )
+    output:
+        expand( os.path.join( out_dir, "cleaned/{sample}_{read}.fastq.gz" ), out_dir=out_dir, sample=SAMPLES, read=["R1", "R2"] )
+    shell:
+        "python3 res/remove_contamination.py -t {config[remove_contamination][threshold]} {params.input_folder} {params.output_dir}"
 
 rule umi_collapse_bulk:
     """ Assembles reads containing the same UMI.
