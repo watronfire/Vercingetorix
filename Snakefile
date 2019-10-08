@@ -21,8 +21,10 @@ for f in os.listdir( in_dir ):
 rule all:
     input:
         expand( os.path.join( out_dir, "analyze/{sample}.clonotypes.{chain}.txt" ), out_dir=out_dir, sample=SAMPLES, chain=["TRA", "TRB"] )
-
-# TODO combine log files into a pandas dataframe and export into csv.
+    params:
+        output_file = os.path.join( out_dir, "metadata.csv" )
+    shell:
+        "python3 res/collate_metadata.py {out_dir} {params.output_file}"
 
 rule repertoire_assembly:
     input:
@@ -60,7 +62,7 @@ rule remove_contamination:
         "python3 res/remove_contamination.py -t {config[remove_contamination][threshold]} {params.input_folder} {params.output_dir}"
 
 rule umi_collapse_bulk:
-    """ Assembles reads containing the same UMI.
+    """ Assembles reads containing the same UMI
     
     """
 
