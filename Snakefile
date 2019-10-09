@@ -20,7 +20,7 @@ for f in os.listdir( in_dir ):
 
 rule all:
     input:
-        expand( os.path.join( out_dir, "analyze/{sample}.clonotypes.{chain}.txt" ), out_dir=out_dir, sample=SAMPLES, chain=["TRA", "TRB"] )
+        expand( os.path.join( out_dir, "clonotypes/{sample}.clonotypes.txt" ), out_dir=out_dir, sample=SAMPLES )
     params:
         output_file = os.path.join( out_dir, "metadata.csv" )
     shell:
@@ -32,7 +32,8 @@ rule repertoire_assembly:
         os.path.join( out_dir, "cleaned/{sample}_R2.fastq.gz" )
     output:
         os.path.join( out_dir, "analyze/{sample}.clonotypes.TRA.txt" ),
-        os.path.join( out_dir, "analyze/{sample}.clonotypes.TRB.txt" )
+        os.path.join( out_dir, "analyze/{sample}.clonotypes.TRB.txt" ),
+        os.path.join( out_dir, "clonotypes/{sample}.clonotypes.txt" )
     run:
         sample_folder = os.path.join( out_dir, "analyze", wildcards.sample )
         # First build the command
@@ -49,6 +50,10 @@ rule repertoire_assembly:
             sample_folder
         )
         subprocess.call( command, shell=True )
+
+        clonotype_folder = os.path.join( out_dir, "clonotypes", "{}.clonotypes.txt".format( wildcards.sample ) )
+        export_command = "mixcr exportClones -c TRA,TRB {}.clna {}".format( sample_folder, clonotype_folder )
+        subprocess.call( export_command, shell=True )
 
 rule remove_contamination:
     input:
