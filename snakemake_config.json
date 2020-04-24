@@ -1,9 +1,9 @@
 {
   "__default__" : {
-    "in_dir" : "/Users/natem/storedAnalysis/input",
+    "in_dir" : "/gpfs/home/natem/analysis/2020.03.18_tcr/fastqs",
     "in_ext" : "fastq.gz",
-    "out_dir" : "/Users/natem/storedAnalysis/output_sm",
-    "run_name" : "testing",
+    "out_dir" : "/gpfs/home/natem/analysis/2020.03.18_tcr",
+    "run_name" : "cycles",
     "sampleRegex" : "\\b\\w[a-zA-Z0-9]{3}\\b"
   },
   "repertoire_assembly" : {
@@ -13,7 +13,7 @@
     "3-end" : "c-primers",
     "adapters" : "adapters-present",
     "receptor_type" : "TCR",
-    "etc" : "--align \"-OreadsLayout=Collinear\" --assemble \"-OqualityAggregationType=Average\""
+    "etc" : "--align \"-OreadsLayout=Collinear -OallowPartialAlignments=true -OallowNoCDR3PartAlignments=true\" --assemble \"-OqualityAggregationType=Average\""
   },
   "remove_contamination" : {
     "threshold" : 40
